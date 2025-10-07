@@ -151,7 +151,7 @@
   
 <script>  
   const tujuan = sessionStorage.getItem('otp_tujuan');  
-  document.getElementById('tujuanOtp').innerText = tujuan ?? "[tidak tersedia]";  
+  document.getElementById('tujuanOtp').innerText = tujuan ?? "Nomor kamu";  
   
   let time = 100;  
   const countdownEl = document.getElementById('countdown');  
@@ -175,7 +175,7 @@
     .then(() => {  
       Swal.fire({  
         title: 'Gagal!',  
-        text: 'Kode OTP kadaluarsa,masukan kode baru .',  
+        text: 'Kode OTP kedaluwarsa, masukan kode baru.',  
         icon: 'error',  
         confirmButtonText: 'Coba Lagi'  
       });  
